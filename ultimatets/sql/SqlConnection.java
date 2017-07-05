@@ -56,29 +56,13 @@ public class SqlConnection {
     
     public void createTables(){
     	try {
-			if(!tableExist(connection, "UltimateTS_linkedplayers")){
-				PreparedStatement q = connection.prepareStatement("CREATE TABLE `"+database+"`.`UltimateTS_linkedplayers` ( `id` INT(16) NOT NULL AUTO_INCREMENT , `uuid` VARCHAR(255) NOT NULL , `dbId` INT(16) NOT NULL, PRIMARY KEY `id`(`id`) ) ENGINE = InnoDB;");
-				q.executeUpdate();
-				q.close();
-				UltimateTs.main().log(LogEnum.Sql, Level.INFO, "Table UltimateTS_linkedplayers created succesfully!");
-			}
+			PreparedStatement q = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `"+database+"`.`UltimateTS_linkedplayers` ( `id` INT(16) NOT NULL AUTO_INCREMENT , `uuid` VARCHAR(255) NOT NULL , `dbId` INT(16) NOT NULL, PRIMARY KEY `id`(`id`) ) ENGINE = InnoDB;");
+			q.executeUpdate();
+			q.close();
+			UltimateTs.main().log(LogEnum.Sql, Level.INFO, "Table UltimateTS_linkedplayers created succesfully!");
 		}catch (SQLException e){
 			e.printStackTrace();
 		}
-    }
-    
-    public boolean tableExist(Connection conn, String tableName) throws SQLException {
-        boolean tExists = false;
-        try (ResultSet rs = conn.getMetaData().getTables(null, null, tableName, null)) {
-            while (rs.next()) { 
-                String tName = rs.getString("TABLE_NAME");
-                if (tName != null && tName.equals(tableName)) {
-                    tExists = true;
-                    break;
-                }
-            }
-        }
-        return tExists;
     }
     
     //FUNCTIONS:
